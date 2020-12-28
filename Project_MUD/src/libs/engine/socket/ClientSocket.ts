@@ -109,7 +109,7 @@ class ClientSocket {
             if(GameInstance.clientSocket != null){
                 GameInstance.clientSocket.webSocket =null;
                 GameInstance.clientSocket.initWebSocket(function(){
-                    PipeManager.sendMsg(PipeConstants.SHOW_MAINUI_GM_INSTRUCT, "#reconnect " + GameConfig.userID + " " + GameConfig.pwd);
+                    // PipeManager.sendMsg(PipeConstants.SHOW_MAINUI_GM_INSTRUCT, "#reconnect " + GameConfig.userID + " " + GameConfig.pwd);
                 }, this);   
             }else{
                 console.log("net inst is null?");
