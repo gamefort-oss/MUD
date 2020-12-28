@@ -1,0 +1,52 @@
+{
+  "engineVersion": "5.3.10",
+  "compilerVersion": "5.3.10",
+  "template": {},
+  "target": {
+    "current": "web"
+  },
+  "modules": [
+    {
+      "name": "egret"
+    },
+    {
+      "name": "eui"
+    },
+    {
+      "name": "assetsmanager"
+    },
+    {
+      "name": "dragonBones"
+    },
+    {
+      "name": "game"
+    },
+    {
+      "name": "tween"
+    },
+    {
+      "name": "promise"
+    },
+    {
+      "name": "socket"
+    },
+    {
+      "name": "WXCloudApi",
+      "path": "./libs/WXCloudApi"
+    },
+    {
+      "name": "egretmgobe",
+      "path": "./libs/egretmgobe"
+    },
+    {
+      "name": "puremvc",
+      "path": "./libs/modules/puremvc"
+    }
+  ],
+  "eui": {
+    "exmlRoot": [
+      "resource/eui_skins",
+      "resource/ui"
+    ]
+  }
+}
