@@ -34,8 +34,7 @@ class ProcessManager {
                 // PickUp_ApplicationFacade,
                 // Item_ApplicationFacade,
                 // Start_ApplicationFacade,
-                Test_ApplicationFacade
-                // MainUI_ApplicationFacade
+                Main_ApplicationFacade
             ];
 
             let startupFacade=($i: number, $facade: any)=>{

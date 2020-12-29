@@ -2,31 +2,31 @@
 /*
 * gkf;
 */
-class Test_ApplicationFacade extends puremvc.Facade
+class Main_ApplicationFacade extends puremvc.Facade
 {
 
-    public static readonly NAME:string = "Test_ApplicationFacade";
+    public static readonly NAME:string = "Main_ApplicationFacade";
 
     constructor($key:string=null) {
         super($key);
         PipeManager.registerMsgs( [
-            Test_ApplicationFacade["NAME"],
-            PipeConstants.GET_TEST_PANEL
+            PipeConstants.STARTUP_MAIN_PANEL,
+            PipeConstants.SHOW_MAIN_PANEL
 			], this.handlePipeMessage, this);
     }
 
-    public static getInstance() : Test_ApplicationFacade
+    public static getInstance() : Main_ApplicationFacade
     {
-        let n:string = Test_ApplicationFacade["NAME"];
+        let n:string = Main_ApplicationFacade["NAME"];
         if ( this.instanceMap[ n ] == null )
-            this.instanceMap[ n ] = new Test_ApplicationFacade(n);
+            this.instanceMap[ n ] = new Main_ApplicationFacade(n);
         return this.instanceMap[ n ];
     }
 
     public initializeController():void
     {
         super.initializeController();
-        this.registerCommand("STARTUP", Test_StartupCommand);
+        this.registerCommand("STARTUP", Main_StartupCommand);
     }
 
     /**
@@ -39,10 +39,10 @@ class Test_ApplicationFacade extends puremvc.Facade
         let data:Object = $notification.getBody();
         switch ( key )
         {
-            case "Test_ApplicationFacade":
+            case PipeConstants.STARTUP_MAIN_PANEL:
                 this.startup();
                 break;
-            case PipeConstants.GET_TEST_PANEL:
+            case PipeConstants.SHOW_MAIN_PANEL:
                 this.sendNotification(key, data);
                 break;
         }

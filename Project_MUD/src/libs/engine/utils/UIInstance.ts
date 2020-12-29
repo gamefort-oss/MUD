@@ -11,14 +11,14 @@ class UIInstance
         return this._uiContainer;
     }
 
-    private  _testUI:TestUI;
+    private  _mainUIPanel:MainUIPanel;
     /**测试面板*/
-    public get testUI():TestUI{
-        if(this._testUI==null)
+    public get mainUIPanel():MainUIPanel{
+        if(this._mainUIPanel==null)
         {
-            this._testUI = new TestUI();
-            UIEventManager.registerUI(this._testUI, "TestUI");
+            this._mainUIPanel = new MainUIPanel();
+            UIEventManager.registerUI(this._mainUIPanel, "MainUIPanel");
         }
-        return this._testUI;
+        return this._mainUIPanel;
     }
 }

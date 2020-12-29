@@ -61,11 +61,9 @@ class Main extends eui.UILayer {
         await this.loadResource()
         this.createGameScene();
         const result = await RES.getResAsync("description_json")
-        // this.startAnimation(result);
         await platform.login();
         const userInfo = await platform.getUserInfo();
         console.log(userInfo);
-
     }
 
     private async loadResource() {
@@ -90,7 +88,6 @@ class Main extends eui.UILayer {
             theme.addEventListener(eui.UIEvent.COMPLETE, () => {
                 resolve();
             }, this);
-
         })
     }
 
@@ -118,6 +115,7 @@ class Main extends eui.UILayer {
         this.addChild(button);
         button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
     }
+
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
@@ -133,7 +131,9 @@ class Main extends eui.UILayer {
      * 点击按钮
      * Click the button
      */
-    private onButtonClick(e: egret.TouchEvent) {       
-        PipeManager.sendMsg(PipeConstants.GET_TEST_PANEL);
+    private onButtonClick(e: egret.TouchEvent) {     
+        (e.target as eui.Button).visible = false;
+        PipeManager.sendMsg(PipeConstants.SHOW_MAIN_PANEL);
+        
     }
 }

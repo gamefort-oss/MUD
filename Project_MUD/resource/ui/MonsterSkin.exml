@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<e:Skin class="TestUISkin"
+<e:Skin class="MonsterSkin"
 	 width="640"
 	height="1136" xmlns:e="http://ns.egret.com/eui">
-	<e:Image width="640" height="929" x="0" y="101" source="bg_jpg" anchorOffsetY="0"/>
 </e:Skin>

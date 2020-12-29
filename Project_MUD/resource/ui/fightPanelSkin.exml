@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="fightSkin"
+	 width="600"
+	height="420" xmlns:e="http://ns.egret.com/eui">
+	<e:Image width="600" height="420" x="0" y="0" source="fight_png"/>
+</e:Skin>

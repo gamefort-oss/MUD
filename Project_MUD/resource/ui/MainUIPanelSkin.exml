@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="MainUIPanelSkin"
+	 width="640"
+	height="1136" xmlns:e="http://ns.egret.com/eui">
+	<e:Image width="640" height="1136" x="0" y="0" source="background_jpg"/>
+	<e:Button id="btnFIght" label="战斗" x="40" y="1000" width="80" height="80"/>
+	<e:Button id="btnChar" label="角色" x="200" y="1000" width="80" height="80"/>
+	<e:Button id="btnMall" label="商城" x="360" y="1000" width="80" height="80"/>
+	<e:Button id="btnActive" label="活动" x="520" y="1000" width="80" height="80"/>
+</e:Skin>

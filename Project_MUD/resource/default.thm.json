@@ -13,7 +13,7 @@
 		"eui.VScrollBar": "resource/eui_skins/VScrollBarSkin.exml",
 		"eui.VSlider": "resource/eui_skins/VSliderSkin.exml",
 		"eui.ItemRenderer": "resource/eui_skins/ItemRendererSkin.exml",
-		"TestUI": "resource/ui/TestUISkin.exml"
+		"MainUIPanel": "resource/ui/MainUIPanelSkin.exml"
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
@@ -30,7 +30,9 @@
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/VScrollBarSkin.exml",
 		"resource/eui_skins/VSliderSkin.exml",
-		"resource/ui/TestUISkin.exml"
+		"resource/ui/fightPanelSkin.exml",
+		"resource/ui/MainUIPanelSkin.exml",
+		"resource/ui/MonsterSkin.exml"
 	],
 	"path": "resource/default.thm.json"
 }
