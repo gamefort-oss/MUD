@@ -31,31 +31,22 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 		this.addMonster();
 	}
 
-	// private onTapHandler(evt:egret.TouchEvent):void
-	// {
-	// 	switch(evt.target)
-	// 	{
-			
-	// 	}
-	// }
-
-
 	public addMonster():void
 	{
 		this._grid = new astar.Grid(6,6);
 
-		let arr = [ [0, 1, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0],
+		let arr = [ [1, 1, 0, 0, 0, 1],
+					[0, 0, 0, 1, 0, 0],
 					[0, 1, 0, 1, 0, 0],
-					[0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0],
-					[0, 0, -1, 0, 0, 0] ]; 
+					[1, 0, 0, 0, 0, 0],
+					[0, 0, 0, 1, 0, 0],
+					[1, 0, -1, 0, 0, 1] ]; 
 
 		let i = 0;
 		let j = 0;
-		for (let i = 0; i < arr.length; i++) 
+		for (i = 0; i < arr.length; i++) 
 		{
-			for (let j = 0; j < arr[i].length; j++) 
+			for (j = 0; j < arr[i].length; j++) 
 			{
 				if(arr[i][j] == 1)
 				{
@@ -64,84 +55,109 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 					monster.y = i * 70;
 					this.monsterContainer.addChild(monster);
 					monster.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
-
-					this._grid.setWalkable(i, j, false);
+					this._grid.setWalkable(j, i, false);
 				}
 				else if(arr[i][j] == -1)
 				{
 					this._player = new Monster();
 					this._player.x = j * 100;
 					this._player.y = i * 70;
+					this._player.setName("慕容");
 					this.addChild(this._player);
 				}
 			}
 		}
-
-		for(let i = 0; i < this._grid.numCols; i++)
-		{
-			for(let j = 0; j <this._grid.numRows; j++)
-			{
-				var node:astar.Node =this._grid.getNode(i, j);
-			}
-		}
-
+		// this.drawGrid();
 	}
 
-	/**
-	 * Determines the color of a given node based on its state.
-	 */
-	private getColor(node:astar.Node)
-	{
-		if(!node.walkable) return 0;
-		if(node == this._grid.startNode) return 0xcccccc;
-		if(node == this._grid.endNode) return 0xcccccc;
-		return 0xffffff;
-	}
+	// private drawGrid():void
+	// {
+	// 	// this.graphics.clear();
+	// 	for(let i = 0; i < this._grid.numCols; i++)
+	// 	{
+	// 		for(let j = 0; j <this._grid.numRows; j++)
+	// 		{
+	// 			var node:astar.Node =this._grid.getNode(i, j);
+				
+	// 			let sp:egret.Sprite = new egret.Sprite();
+	// 			sp.graphics.beginFill(this.getColor(node));
+	// 			sp.graphics.drawRect(0,0,100,70);
+	// 			sp.graphics.endFill();
+	// 			sp.x = i*this._cellSizeX;
+	// 			sp.y = j*this._cellSizeY;
+	// 			sp.alpha = 0.5;
+	// 			sp.touchEnabled = false;
+	// 			this.addChild(sp);
+	// 		}
+	// 	}
+	// }
+	
+	// private getColor(node:astar.Node)
+	// {
+	// 	if(!node.walkable) return 0;
+	// 	if(node == this._grid.startNode) return 0xcccccc;
+	// 	if(node == this._grid.endNode) return 0xcccccc;
+	// 	return 0xffffff;
+	// }
 
-	/**
-	 * Handles the click event on the GridView. Finds the clicked on cell and toggles its walkable state.
-	 */
 	private onTapHandler(event:egret.TouchEvent):void
 	{
-		let m:Monster = event.currentTarget as Monster
-		var xpos = Math.floor(m.x / this._cellSizeX);
-		var ypos = Math.floor(m.y  / this._cellSizeY);
-		this._grid.setEndNode(xpos, ypos);
-		
-		xpos = Math.floor(this._player.x / this._cellSizeX);
-		ypos = Math.floor(this._player.y / this._cellSizeY);
-		this._grid.setStartNode(xpos, ypos);
-		
-		// this.drawGrid();
+		if(this.isPathing) return;
 
+		let m:Monster = event.currentTarget as Monster
+		let xpos = Math.floor(m.x / this._cellSizeX);
+		let ypos = Math.floor(m.y  / this._cellSizeY);				
+		
+		let xposp = Math.floor(this._player.x / this._cellSizeX);
+		let yposp = Math.floor(this._player.y / this._cellSizeY);
+		this._grid.setStartNode(xposp, yposp);
+
+		let aStar:astar.AStar = new astar.AStar();
+		//获取点击点周围所有可行走点
+		var aroundPath:Array<any> = new Array<any>();
+		let i = 0;
+		let j = 0;
+		for (i = xpos - 1; i <= xpos + 1; i++) 
+		{
+			for (j = ypos - 1; j <= ypos + 1; j++) 
+			{
+				//寻路应该在6*6的范围内进行
+				if(i < 0 || j < 0 || i > 5 || j > 5) continue;
+				var node:astar.Node =this._grid.getNode(i, j);
+				if(node && node.walkable)
+				{
+					this._grid.setEndNode(i, j);
+					aStar.findPath(this._grid);
+					this._path = aStar.path;
+					aroundPath.push(this._path);
+				}
+			}
+		}
+		//路劲从小到大排序
+		aroundPath.sort(function (m, n) {
+			if (m < n) return -1
+			else if (m > n) return 1
+			else return 0
+		});
+		
 		this.startTime = egret.getTimer();
-		this.findPath();
+		if(aroundPath.length > 0) this.findPath(aroundPath);		
 		console.log("耗时:", egret.getTimer() - this.startTime);
 	}
 
 	private startTime = 0;
-	
-	/**
-	 * Creates an instance of AStar and uses it to find a path.
-	 */
-	private findPath():void
+	private isPathing:boolean;
+	private findPath(_path:Array<any>):void
 	{
-		var aStar:astar.AStar = new astar.AStar();
-		if(aStar.findPath(this._grid))
-		{
-			this._path = aStar.path;
+			this.isPathing = true;
 			this._index = 0;
 			this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
-		}
 	}
 	
-	/**
-	 * Finds the next node on the path and eases to it.
-	 */
 	private onEnterFrame(event:egret.Event):void
 	{
-		var targetX = this._path[this._index].x * this._cellSizeX +  this._cellSizeX;
-		var targetY = this._path[this._index].y * this._cellSizeY + this._cellSizeY;
+		var targetX = this._path[this._index].x * this._cellSizeX;
+		var targetY = this._path[this._index].y * this._cellSizeY;
 		var dx = targetX - this._player.x;
 		var dy = targetY - this._player.y;
 		var dist = Math.sqrt(dx * dx + dy * dy);
@@ -150,14 +166,15 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 			this._index++;
 			if(this._index >= this._path.length)
 			{
+				this.isPathing = false;
 				this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
 			}
 		}
 		else
 		{
+			console.log("x >> " + dx + "*****" + "y >> " + dy);
 			this._player.x += dx;
 			this._player.y += dy;
 		}
-	}
-	
+	}	
 }
