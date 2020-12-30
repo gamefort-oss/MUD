@@ -32,7 +32,7 @@
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/VScrollBarSkin.exml",
 		"resource/eui_skins/VSliderSkin.exml",
-		"resource/ui/fightPanelSkin.exml",
+		"resource/ui/FightPanelSkin.exml",
 		"resource/ui/MainUIPanelSkin.exml",
 		"resource/ui/MonsterSkin.exml"
 	],
