@@ -31,12 +31,12 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 	{
 		this._grid = new astar.Grid(6,6);
 
-		let arr = [ [1, 1, 0, 0, 0, 1],
-					[0, 0, 0, 1, 0, 0],
-					[0, 1, 0, 1, 0, 0],
+		let arr = [ [1, 0, 1, 0, 0, 1],
+					[0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0],
 					[1, 0, 0, 0, 0, 0],
-					[0, 0, 0, 1, 0, 0],
-					[1, 0, -1, 0, 0, 1] ]; 
+					[0, 0, 0, 0, 0, 0],
+					[1, 0, 0, 0, 0, 1] ]; 
 
 		let i = 0;
 		let j = 0;
@@ -72,8 +72,10 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 
 		let m:Monster = event.currentTarget as Monster;
 		this._targetMonster = m;
-		let xpos = Math.floor(m.x / this._cellSizeX);
-		let ypos = Math.floor(m.y  / this._cellSizeY);				
+		// let xpos = Math.floor(m.x / this._cellSizeX);
+		// let ypos = Math.floor(m.y  / this._cellSizeY);		
+		let xpos = 2;
+		let ypos = 3;			
 		
 		let xposp = Math.floor(this._player.x / this._cellSizeX);
 		let yposp = Math.floor(this._player.y / this._cellSizeY);
@@ -118,10 +120,10 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 	{
 			this.isPathing = true;
 			this._index = 0;
-			this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+			// this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
 	}
 	
-	private onEnterFrame(event:egret.Event):void
+	public onEnterFrame(event:egret.Event = null):void
 	{
 		if(this.isPathing == true)
 		{
@@ -136,8 +138,6 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				if(this._index >= this._path.length)
 				{
 					this.isPathing = false;
-					this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
-					this.beginFight();
 				}
 			}
 			else
@@ -146,42 +146,20 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				this._player.x += dx;
 				this._player.y += dy;
 			}
-		}
-		
+		}		
 	}	
 
-	private beginFight():void
-	{
-		let timer:egret.Timer = new egret.Timer(2000);
-		timer.addEventListener(egret.TimerEvent.TIMER, this.onTimerHandler, this);
-		timer.start();	
-	}
-
-	private onTimerHandler(event:egret.TimerEvent):void
-	{
-		let p:egret.Point = new egret.Point(200 , 210);
-		egret.Tween.get(this._player).to({x : (200 - 5), y : (210 - 5)}, 50, egret.Ease.backOut).wait(50).to({x : p.x, y : p.y}, 50, egret.Ease.backOut);
-	}
-
-	// private getAttackDirection(target:egret.DisplayObjectContainer, self:egret.DisplayObjectContainer):number
+	// private beginFight():void
 	// {
-	// 	if(self.x == target.x && self.y < target.x)
-	// 		return 0;
-	// 	else if(self.x > target.x && self.y < target.x)
-	// 		return 1;
-	// 	else if(self.x > target.x && self.y == target.x)
-	// 		return 2;
-	// 	else if(self.x > target.x && self.y > target.x)
-	// 		return 3;
-	// 	else if(self.x == target.x && self.y < target.x)
-	// 		return 4;
-	// 	else if(self.x == target.x && self.y < target.x)
-	// 		return 5;
-	// 	else if(self.x == target.x && self.y < target.x)
-	// 		return 6;
-	// 		else if(self.x == target.x && self.y < target.x)
-	// 		return 7;
-	// 	return 0;
+	// 	let timer:egret.Timer = new egret.Timer(2000);
+	// 	timer.addEventListener(egret.TimerEvent.TIMER, this.onTimerHandler, this);
+	// 	timer.start();	
+	// }
+
+	// private onTimerHandler(event:egret.TimerEvent):void
+	// {
+	// 	let p:egret.Point = new egret.Point(200 , 210);
+	// 	egret.Tween.get(this._player).to({x : (200 - 5), y : (210 - 5)}, 50, egret.Ease.backOut).wait(50).to({x : p.x, y : p.y}, 50, egret.Ease.backOut);
 	// }
 	
 }

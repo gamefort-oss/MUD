@@ -2,8 +2,17 @@ class Monster extends eui.Component implements  eui.UIComponent {
 
 	private btn:eui.Button;
 
+	private _cellSizeX:number = 100;
+	private _cellSizeY:number = 70;
+	private _grid:astar.Grid;
+	private _player:Monster;
+	private _index:number;
+	private _path:Array<any>;
+
 	public constructor() {
-		super();		
+		super();
+		
+		this._player = this;
 	}
 
 	protected partAdded(partName:string,instance:any):void

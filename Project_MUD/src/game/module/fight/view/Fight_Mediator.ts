@@ -49,6 +49,7 @@ class Fight_Mediator extends puremvc.Mediator{
     {
         UIEventManager.registerEvent("FightPanel",[
             // FightPanel.SHOW_FIGHT_PANEL
+            egret.Event.ENTER_FRAME
             ], this, this.panel, this.handler);
     }
 
@@ -57,9 +58,15 @@ class Fight_Mediator extends puremvc.Mediator{
         let data:any = event.data;
 		switch(event.type)
         {
-            // case FightPanel.SHOW_FIGHT_PANEL:
-                
-            //     break;
+            case egret.Event.ENTER_FRAME:
+                this.onEnterFrame(event);
+                break;
         }
-	}
+    }
+
+    private onEnterFrame(event:egret.Event):void
+	{
+        // this.panel.onEnterFrame(event);
+    }
+    
 }
