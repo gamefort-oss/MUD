@@ -22,12 +22,8 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-
-		// this.btnFIght.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
 		this.monsterContainer = new egret.Sprite();
 		this.addChild(this.monsterContainer);
-		// this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
-
 		this.addMonster();
 	}
 
@@ -67,44 +63,15 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				}
 			}
 		}
-		// this.drawGrid();
 	}
 
-	// private drawGrid():void
-	// {
-	// 	// this.graphics.clear();
-	// 	for(let i = 0; i < this._grid.numCols; i++)
-	// 	{
-	// 		for(let j = 0; j <this._grid.numRows; j++)
-	// 		{
-	// 			var node:astar.Node =this._grid.getNode(i, j);
-				
-	// 			let sp:egret.Sprite = new egret.Sprite();
-	// 			sp.graphics.beginFill(this.getColor(node));
-	// 			sp.graphics.drawRect(0,0,100,70);
-	// 			sp.graphics.endFill();
-	// 			sp.x = i*this._cellSizeX;
-	// 			sp.y = j*this._cellSizeY;
-	// 			sp.alpha = 0.5;
-	// 			sp.touchEnabled = false;
-	// 			this.addChild(sp);
-	// 		}
-	// 	}
-	// }
-	
-	// private getColor(node:astar.Node)
-	// {
-	// 	if(!node.walkable) return 0;
-	// 	if(node == this._grid.startNode) return 0xcccccc;
-	// 	if(node == this._grid.endNode) return 0xcccccc;
-	// 	return 0xffffff;
-	// }
-
+	private _targetMonster:Monster;
 	private onTapHandler(event:egret.TouchEvent):void
 	{
 		if(this.isPathing) return;
 
-		let m:Monster = event.currentTarget as Monster
+		let m:Monster = event.currentTarget as Monster;
+		this._targetMonster = m;
 		let xpos = Math.floor(m.x / this._cellSizeX);
 		let ypos = Math.floor(m.y  / this._cellSizeY);				
 		
@@ -133,7 +100,7 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				}
 			}
 		}
-		//路劲从小到大排序
+		//路径从小到大排序
 		aroundPath.sort(function (m, n) {
 			if (m < n) return -1
 			else if (m > n) return 1
@@ -156,25 +123,65 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 	
 	private onEnterFrame(event:egret.Event):void
 	{
-		var targetX = this._path[this._index].x * this._cellSizeX;
-		var targetY = this._path[this._index].y * this._cellSizeY;
-		var dx = targetX - this._player.x;
-		var dy = targetY - this._player.y;
-		var dist = Math.sqrt(dx * dx + dy * dy);
-		if(dist < 1)
+		if(this.isPathing == true)
 		{
-			this._index++;
-			if(this._index >= this._path.length)
+			var targetX = this._path[this._index].x * this._cellSizeX;
+			var targetY = this._path[this._index].y * this._cellSizeY;
+			var dx = targetX - this._player.x;
+			var dy = targetY - this._player.y;
+			var dist = Math.sqrt(dx * dx + dy * dy);
+			if(dist < 1)
 			{
-				this.isPathing = false;
-				this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+				this._index++;
+				if(this._index >= this._path.length)
+				{
+					this.isPathing = false;
+					this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+					this.beginFight();
+				}
+			}
+			else
+			{
+				console.log("x >> " + dx + "*****" + "y >> " + dy);
+				this._player.x += dx;
+				this._player.y += dy;
 			}
 		}
-		else
-		{
-			console.log("x >> " + dx + "*****" + "y >> " + dy);
-			this._player.x += dx;
-			this._player.y += dy;
-		}
+		
 	}	
+
+	private beginFight():void
+	{
+		let timer:egret.Timer = new egret.Timer(2000);
+		timer.addEventListener(egret.TimerEvent.TIMER, this.onTimerHandler, this);
+		timer.start();	
+	}
+
+	private onTimerHandler(event:egret.TimerEvent):void
+	{
+		let p:egret.Point = new egret.Point(200 , 210);
+		egret.Tween.get(this._player).to({x : (200 - 5), y : (210 - 5)}, 50, egret.Ease.backOut).wait(50).to({x : p.x, y : p.y}, 50, egret.Ease.backOut);
+	}
+
+	// private getAttackDirection(target:egret.DisplayObjectContainer, self:egret.DisplayObjectContainer):number
+	// {
+	// 	if(self.x == target.x && self.y < target.x)
+	// 		return 0;
+	// 	else if(self.x > target.x && self.y < target.x)
+	// 		return 1;
+	// 	else if(self.x > target.x && self.y == target.x)
+	// 		return 2;
+	// 	else if(self.x > target.x && self.y > target.x)
+	// 		return 3;
+	// 	else if(self.x == target.x && self.y < target.x)
+	// 		return 4;
+	// 	else if(self.x == target.x && self.y < target.x)
+	// 		return 5;
+	// 	else if(self.x == target.x && self.y < target.x)
+	// 		return 6;
+	// 		else if(self.x == target.x && self.y < target.x)
+	// 		return 7;
+	// 	return 0;
+	// }
+	
 }
