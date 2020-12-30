@@ -12,7 +12,7 @@ class UIInstance
     }
 
     private  _mainUIPanel:MainUIPanel;
-    /**测试面板*/
+    /**主界面*/
     public get mainUIPanel():MainUIPanel{
         if(this._mainUIPanel==null)
         {
@@ -20,5 +20,16 @@ class UIInstance
             UIEventManager.registerUI(this._mainUIPanel, "MainUIPanel");
         }
         return this._mainUIPanel;
+    }
+
+    private  _fightPanel:FightPanel;
+    /**战斗面板*/
+    public get fightPanel():FightPanel{
+        if(this._fightPanel==null)
+        {
+            this._fightPanel = new FightPanel();
+            UIEventManager.registerUI(this._fightPanel, "FightPanel");
+        }
+        return this._fightPanel;
     }
 }

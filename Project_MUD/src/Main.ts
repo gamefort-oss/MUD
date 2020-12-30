@@ -134,6 +134,6 @@ class Main extends eui.UILayer {
     private onButtonClick(e: egret.TouchEvent) {     
         (e.target as eui.Button).visible = false;
         PipeManager.sendMsg(PipeConstants.SHOW_MAIN_PANEL);
-        
+        PipeManager.sendMsg(PipeConstants.SHOW_FIGHT_PANEL);
     }
 }
