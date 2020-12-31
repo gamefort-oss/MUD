@@ -11,6 +11,7 @@ namespace astar{
 		public g:number;    //起点到当前点代价
 		public h:number;    //当前点到终点估计代价
 		public walkable:boolean = true;
+		public type:number = 0;//0默认1怪物2人物
 		public parent:Node;
 		public costMultiplier:number = 1.0;
 	

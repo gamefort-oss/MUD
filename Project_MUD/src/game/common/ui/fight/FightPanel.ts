@@ -2,22 +2,20 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 
 	private monsterContainer:egret.Sprite;
 
-	// private _cellSizeX:number = 100;
-	// private _cellSizeY:number = 70;
 	private _grid:astar.Grid;
-	private _player:Monster;
+	private _player:Player;
 	private _index:number;
 	private _path:Array<any>;
 
 
 	private _aStar:astar.AStar;
 
-	private  arr:Array<Array<any>> = [ [1, 0, 1, 0, 0, 1],
-					[0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0],
-					[1, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0],
-					[1, 0, 0, 0, 0, 1] ]; 
+	private  arr:Array<Array<number>> = [ 	[1, 0, 0, 0, 0, 0],
+											[0, 1, 0, 0, 0, 0],
+											[0, 0, 0, 1, 1, 0],
+											[0, 0, 2, 0, 0, 0],
+											[0, 0, 0, 0, 1, 0],
+											[0, 0, 0, 0, 0, 1] 	]; 
 
 	public constructor() {
 		super();		
@@ -42,35 +40,47 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 	}
 
 	private init():void
-	{
+	{		
 		let i = 0;
 		let j = 0;
-		for (i = 0; i < this.arr.length; i++) 
+		//将怪物排列为纵向
+		let path:Array<Array<number>> = [];
+		for (i = 0; i < 6; i++) 
 		{
-			for (j = 0; j < this.arr[i].length; j++) 
+			path[i] = [];
+			for (j = 0; j < 6; j++) 
 			{
-				if(this.arr[i][j] == 1)
+				path[i][j] = this.arr[j][i];
+			}
+		}
+
+		for (i = 0; i < path.length; i++) 
+		{
+			for (j = 0; j < path[i].length; j++) 
+			{
+				if(path[i][j] == 1)
 				{
 					let monsterRes:MonsterRes = new MonsterRes();
-					monsterRes._x = j * 100;
-					monsterRes._y = i * 70;
-					monsterRes._state = 1;//活着
-
 					let monster:Monster = new Monster();
 					monster.res = monsterRes;
-					monster.x = monsterRes._x;
-					monster.y = monsterRes._y;
+					monster.x = monster._x = i * 100;
+					monster.y = monster._y = j * 70;
+					monster._state = 1;//活着
 					this.monsterContainer.addChild(monster);
 					// monster.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
-					this._grid.setWalkable(j, i, false);
+					this._grid.setWalkable(i, j, false, 1);
 				}
-				else if(this.arr[i][j] == -1)
+				else if(path[i][j] == 2)
 				{
-					this._player = new Monster();
-					this._player.x = j * 100;
-					this._player.y = i * 70;
+					let playerRes:PlayerRes = new PlayerRes();
+					this._player = new Player();					
+					this._player.res = playerRes;
+					this._player.x = this._player._x = i * 100;
+					this._player.y = this._player._y = j * 70;
+					this._player._state = 1;//活着
 					this._player.setName("慕容");
 					this.addChild(this._player);
+					this._grid.setWalkable(i, j, false, 2);
 				}
 			}
 		}
@@ -83,50 +93,67 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 
 	private monsterMove():void
 	{
+		let aroundNode:Array<astar.Node>;
 		let leng:number = this.monsterContainer.numChildren;
 		let m:number = 0;
 		for(m = 0; m < leng; m++)
 		{
 			let monster:Monster = this.monsterContainer.getChildAt(m) as Monster;
-			if(monster.res._state == 1)
+			if(monster._state == 1)
 			{
-				let xpos = Math.floor(monster.res._x / monster.res._cellSizeX);
-				let ypos = Math.floor(monster.res._y  / monster.res._cellSizeY);
-				// this._grid.setStartNode(xpos, ypos);
-
-				let _attack_range:number = monster.res._attack_range;
-				var aroundNode:Array<astar.Node> = new Array<astar.Node>();
+				//获取当前怪所处区域坐标
+				let xpos = Math.floor(monster._x / monster.res._cellSizeX);
+				let ypos = Math.floor(monster._y  / monster.res._cellSizeY);
+				//可行走点数组
+				aroundNode = new Array<astar.Node>();
 				let node:astar.Node;
 				let i = 0;
 				let j = 0;
-				for (i = xpos - _attack_range; i <= xpos + _attack_range; i++) 
+				for (i = xpos - 1; i <= xpos + 1; i++) 
 				{
-					for (j = ypos - _attack_range; j <= ypos + _attack_range; j++) 
+					for (j = ypos - 1; j <= ypos + 1; j++) 
 					{
 						//寻路应该在6*6的范围内进行
 						if(i < 0 || j < 0 || i > 5 || j > 5) continue;
-						node =this._grid.getNode(i, j);
-						if(node && node.walkable)
+						//获取当前怪周围Node
+						node =this._grid.getNode(i, j);						
+						//如果不可行走						
+						if(!node.walkable)
 						{
+							//如果是2玩家导致不可行走
+							if(node.type == 2)
+							{
+								//进入战斗状态，攻击玩家
+								monster._state = 3;
+							}
+						}	
+						//如果可行走添加进数组aroundNode				
+						else if(node && node.walkable)
+						{
+							//寻路不走斜线
+							if(xpos != node.x && ypos != node.y) continue;
 							aroundNode.push(node);
-						}
-						else if(!node.walkable)
-						{
-							
-						}
+						}					
 					}
 				}
-				console.log(">>>>>>>>>>>>>>>>>>"+aroundNode.length);
-				let _index:number = Math.floor(Math.random() * aroundNode.length);
-				node = aroundNode[_index];
-				this._grid.setWalkable(xpos, ypos, true);
-				monster.res._x = node.x * monster.res._cellSizeX;
-				monster.res._y = node.y * monster.res._cellSizeY;
-				egret.setTimeout(function () {              
-					egret.Tween.get(monster).to({x : monster.res._x, y : monster.res._y}, 500, egret.Ease.backOut);
-				}, m, 200 * m);     
-				this._grid.setWalkable(node.x, node.y, false);
-				
+				//如果怪状态为战斗3，不能移动
+				if(monster._state == 3 ) continue;
+				//确认有可以行走的点
+				if(aroundNode.length > 0)
+				{
+					//随机获取一个可行走的点
+					let _index:number = Math.floor(Math.random() * aroundNode.length);
+					node = aroundNode[_index];
+					//移动前将当前点设置可行走
+					this._grid.setWalkable(xpos, ypos, true, 0);
+					monster._x = node.x * monster.res._cellSizeX;
+					monster._y = node.y * monster.res._cellSizeY;
+					egret.setTimeout(function () {              
+						egret.Tween.get(monster).to({x : monster._x, y : monster._y}, 1000, egret.Ease.backOut);
+					}, m, 500 * m);  
+					//移动后将目的点设置不可行走   
+					this._grid.setWalkable(node.x, node.y, false, 1);
+				}				
 			}
 		}
 	}	

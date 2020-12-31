@@ -15,7 +15,7 @@
 		"eui.ItemRenderer": "resource/eui_skins/ItemRendererSkin.exml",
 		"MainUIPanel": "resource/ui/MainUIPanelSkin.exml",
 		"FightPanel": "resource/ui/FightPanelSkin.exml",
-		"Monster": "resource/ui/MonsterSkin.exml"
+		"BaseRole": "resource/ui/RoleSkin.exml"
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
@@ -34,7 +34,7 @@
 		"resource/eui_skins/VSliderSkin.exml",
 		"resource/ui/FightPanelSkin.exml",
 		"resource/ui/MainUIPanelSkin.exml",
-		"resource/ui/MonsterSkin.exml"
+		"resource/ui/RoleSkin.exml"
 	],
 	"path": "resource/default.thm.json"
 }
