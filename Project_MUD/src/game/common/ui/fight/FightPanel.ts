@@ -123,7 +123,7 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				monster.res._x = node.x * monster.res._cellSizeX;
 				monster.res._y = node.y * monster.res._cellSizeY;
 				egret.setTimeout(function () {              
-					egret.Tween.get(monster).to({x : monster.res._x, y : monster.res._y}, 250, egret.Ease.backOut);
+					egret.Tween.get(monster).to({x : monster.res._x, y : monster.res._y}, 500, egret.Ease.backOut);
 				}, m, 200 * m);     
 				this._grid.setWalkable(node.x, node.y, false);
 				
