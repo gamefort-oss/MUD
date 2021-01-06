@@ -107,12 +107,11 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 				//可行走点数组
 				aroundNode = new Array<astar.Node>();
 				let node:astar.Node;
-				let _field_range:number = monster.res._field_range;
-				let i:number = 0;
-				let j:number = 0;
-				for (i = xpos - _field_range; i <= xpos + _field_range; i++) 
+				let i = 0;
+				let j = 0;
+				for (i = xpos - 1; i <= xpos + 1; i++) 
 				{
-					for (j = ypos - _field_range; j <= ypos + _field_range; j++) 
+					for (j = ypos - 1; j <= ypos + 1; j++) 
 					{
 						//寻路应该在6*6的范围内进行
 						if(i < 0 || j < 0 || i > 5 || j > 5) continue;
@@ -120,21 +119,12 @@ class FightPanel extends eui.Component implements  eui.UIComponent {
 						node =this._grid.getNode(i, j);						
 						//如果不可行走						
 						if(!node.walkable)
-						{							
+						{
 							//如果是2玩家导致不可行走
 							if(node.type == 2)
 							{
-								// let _attack_range:number = monster.res._attack_range;
-								// //如果超出攻击范围
-								// if(Math.abs(i - xpos) >= _attack_range || Math.abs(j - ypos) >= _attack_range)
-								// {
-									
-								// }
-								// //进入战斗状态，攻击玩家
-								// else
-								// {
-									monster._state = 3;
-								// }							
+								//进入战斗状态，攻击玩家
+								monster._state = 3;
 							}
 						}	
 						//如果可行走添加进数组aroundNode				
